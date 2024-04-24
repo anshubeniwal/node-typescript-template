@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  app:
+    container_name: app
+    restart: always
+    build: .
+    command: npm run start
+    volumes:
+      - .:/usr/app
+      - /usr/app/node_modules
+    ports:
+      - 8088:8088
+    depends_on:
+      - mongo
+      - mysql
+      - redis
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
+    volumes:
+      - $HOME/docker/volumes/mongo:/data/db
+    ports:
+      - 27017:27017
+  mysql:
+    container_name: mysql
+    image: biarms/mysql:5.7.30
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    ports:
+      - 3306:3306
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'

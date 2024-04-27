@@ -13,10 +13,12 @@ import errorMiddleware from "@middlewares/error.middleware";
 import { logger, stream } from "@utils/logger";
 import { config } from "@/config.server";
 import createMongoConnection from "@utils/mongo";
+import { db } from "../config/database";
 // Start cron jobs
 import CronJobService from "./services/cronJobs/cronJobs.service";
 import responseHandler from "./middlewares/response.middleware";
 import { authMiddleware } from "./middlewares/auth.middleware";
+import { getKnexInstance } from "./utils/mysql";
 
 class App {
   public app: express.Application;
@@ -36,20 +38,40 @@ class App {
     this.startCronJobs();
   }
 
-  public listen() {
-    this.app.listen(this.port, () => {
-      logger.info(`=================================`);
-      logger.info(`======= ENV: ${this.env} =======`);
-      logger.info(`🚀 App listening on the port ${this.port}`);
-      logger.info(`=================================`);
-    });
+  public async listen() {
+    try {
+      await this.initMysql();
+      this.app.listen(this.port, () => {
+        logger.info(`=================================`);
+        logger.info(`======= ENV: ${this.env} =======`);
+        logger.info(`🚀 App listening on the port ${this.port}`);
+        logger.info(`=================================`);
+      });
+    } catch (error) {
+      logger.error(error);
+    }
   }
 
   public getServer() {
     return this.app;
   }
 
+  private initMysql() {
+    return new Promise<void>((resolve, reject) => {
+      db.authenticate()
+        .then(() => {
+          logger.info("Mysql connected via sequelize");
+          resolve();
+        })
+        .catch((err) => {
+          logger.error(`======= DataBase not Connected =======`);
+          reject(err);
+        });
+    });
+  }
+
   private connectToDatabase() {
+    getKnexInstance();
     // createMongoConnection();
   }
 

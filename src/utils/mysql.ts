@@ -35,7 +35,7 @@ let dbConnection: Knex = null;
     .then(async (knexInstance) => {
       await knexInstance.raw("SELECT now()");
       dbConnection = knexInstance;
-      logger.info("Mysql connected");
+      logger.info("Mysql connected via knex");
     })
     .catch((error) => {
       logger.error(error);

@@ -5,6 +5,7 @@ import { encrypt } from "@/utils/RSAEncryption";
 interface ResponseObject {
   ok: boolean;
   err: any;
+  msg?: any;
   data: any;
   code?: number;
 }
@@ -57,10 +58,10 @@ export default (req: Request, res: CustomResponse, next: NextFunction) => {
         )
       );
 
-  res.success = ({ data = {} }) =>
+  res.success = ({ data = {}, msg = "" }) =>
     res
       .status(200)
-      .json(sendResponse({ ok: true, err: null, data }, isEncryption));
+      .json(sendResponse({ ok: true, err: null, data, msg }, isEncryption));
 
   res.sendEncryptedData = ({ data, code = 200 }) =>
     res

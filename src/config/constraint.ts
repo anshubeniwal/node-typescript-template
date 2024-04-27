@@ -20,4 +20,8 @@ export interface IConfigApp {
   logDir: string;
   origin: string;
   credentials: boolean;
+  dbUsername: string;
+  dbPassword: string;
+  dbDatabase: string;
+  dbHost: string;
 }

@@ -40,7 +40,9 @@
     "src/**/*.ts",
     "src/**/*.json",
     ".env",
-    "src/utils/config.server.ts"
+    "src/utils/config.server.ts",
+    "config/config.js",
+    "config/database.ts"
   ],
   "exclude": ["node_modules", "src/http", "src/logs", "src/tests"]
 }
